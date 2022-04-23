@@ -1,28 +1,11 @@
 cmake_minimum_required(VERSION 3.0)
 
 set(CMAKE_EXECUTABLE_SUFFIX_CXX ".elf")
-set(BENCHMARK_BASE_NAME "BenchmarkBase")
-set(BENCHMARK_BACKEND_NAME "BenchmarkBackend")
-
-project(${BENCHMARK_BASE_NAME} LANGUAGES CXX C ASM)
-
-add_library(${BENCHMARK_BACKEND_NAME} STATIC)
-target_sources(${BENCHMARK_BACKEND_NAME}
-    PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark/Stopwatch.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/benchmark/Benchmark.cpp
-)
-
-add_library(${BENCHMARK_BASE_NAME} STATIC)
-target_sources(${BENCHMARK_BASE_NAME}
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/startup/src/gcc_startup_nrf52840.S
-		${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
-)
+project(base LANGUAGES CXX C ASM)
 
 ######################## Dependencies ###########################
 # EM
-add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/em)
+# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/em)
 
 # NRF5
 set(NRF_TARGET NRF52840_XXAA)
@@ -30,42 +13,39 @@ set(NRF_CONFIG_DIR ${CMAKE_CURRENT_SOURCE_DIR}/config/nrf5)
 add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/nrf5)
 
 # SeggerRtt
-add_subdirectory(lib/util/segger-rtt)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/util/segger-rtt)
 
-######################## Building ###########################
-target_link_libraries(${BENCHMARK_BACKEND_NAME}
-    PUBLIC
-        EmbedModernize::EmbedModernize
-		nrf5::nrf5
-)
-target_include_directories(${BENCHMARK_BACKEND_NAME}
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/include
-		${CMAKE_CURRENT_SOURCE_DIR}/config/benchmark
-)
-target_compile_options(${BENCHMARK_BACKEND_NAME}
-	PRIVATE
-		-Wno-volatile
-)
+# Benchmark
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/util/benchmark)
 
-target_link_libraries(${BENCHMARK_BASE_NAME}
-	PUBLIC
-		${BENCHMARK_BACKEND_NAME}
-		SeggerRtt::SeggerRtt
-)
-target_include_directories(${BENCHMARK_BASE_NAME}
-	PRIVATE
-		${CMAKE_CURRENT_SOURCE_DIR}/config/benchmark
-		${CMAKE_CURRENT_SOURCE_DIR}/include
-)
+# Benchmark
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/util/NrfStopwatch)
 
+################################################################
 
-####################### Benchmarks ##########################
-include(cmake/util/helpers.cmake)
+add_library(${PROJECT_NAME} STATIC)
+add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
+target_sources(${PROJECT_NAME}
+        PRIVATE
+            ${CMAKE_CURRENT_SOURCE_DIR}/src/main.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/startup/src/gcc_startup_nrf52840.S
+            ${CMAKE_CURRENT_SOURCE_DIR}/startup/src/system.cpp
+        )
+target_link_libraries(${PROJECT_NAME}
+        PRIVATE
+            benchmark::benchmark
+            NrfStopwatch::NrfStopwatch
+        )
+target_include_directories(${PROJECT_NAME}
+        PUBLIC
+            ${CMAKE_CURRENT_SOURCE_DIR}/include
+        )
+target_link_options(${PROJECT_NAME}
+        INTERFACE
+            -T ${CMAKE_CURRENT_SOURCE_DIR}/startup/linker/nrf52840_xxaa.ld
+            -L ${CMAKE_CURRENT_SOURCE_DIR}/startup/linker
+        )
 
-add_benchmark(test_benchmark
-		${CMAKE_CURRENT_SOURCE_DIR}/examples/blinky
-		${BENCHMARK_BASE_NAME}
-		${CMAKE_CURRENT_SOURCE_DIR}/startup/linker
-		${CMAKE_CURRENT_SOURCE_DIR}/include)
+######################### Examples ###########################
 
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/examples)

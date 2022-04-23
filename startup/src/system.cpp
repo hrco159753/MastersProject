@@ -1,7 +1,7 @@
 #include <cstdint>
 #include <limits>
 
-#include "em/Config.hpp"
+static constexpr std::uintptr_t kNvicAddresss{0xE000E100};
 
 namespace EM::Detail {
 
@@ -24,7 +24,7 @@ struct NVIC_Type {
 extern "C" void SystemInit() {
 
   // Enable all interrupts.
-  auto &nvic{*reinterpret_cast<NVIC_Type *>(Config::kNvicAddresss)};
+  auto &nvic{*reinterpret_cast<NVIC_Type *>(kNvicAddresss)};
   for (auto &enableRegister : nvic.ISER) {
     enableRegister = std::numeric_limits<std::uint32_t>::max();
   }

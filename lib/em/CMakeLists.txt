@@ -10,7 +10,6 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_sources(${PROJECT_NAME}
 	PRIVATE
 		${CMAKE_CURRENT_SOURCE_DIR}/src/em/core/Delay.cpp
-		${CMAKE_CURRENT_SOURCE_DIR}/src/em/detail/system.cpp
 )
 target_compile_options(${PROJECT_NAME}
 	PRIVATE
