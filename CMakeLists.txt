@@ -5,7 +5,7 @@ project(base LANGUAGES CXX C ASM)
 
 ######################## Dependencies ###########################
 # EM
-# add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/em)
+add_subdirectory(${CMAKE_CURRENT_SOURCE_DIR}/lib/em)
 
 # NRF5
 set(NRF_TARGET NRF52840_XXAA)
