@@ -40,7 +40,7 @@ set(C_CXX_OPTIONS "--specs=nano.specs -Wpedantic -Wextra -Wshadow=local -Wall -W
         CACHE INTERNAL "Compile options for C and C++ compiler.")
 set(CXX_OPTIONS "-std=c++20 -fconcepts-diagnostics-depth=5 -fno-exceptions -fno-rtti -fno-use-cxa-atexit"
         CACHE INTERNAL "Compile options for C++ compiler.")
-set(LINKER_OPTIONS "-ffunction-sections -fdata-sections -Wl,--gc-sections --verbose"
+set(LINKER_OPTIONS "-ffunction-sections -fdata-sections -Wl,--gc-sections"
         CACHE INTERNAL "Link options.")
 
 set(CMAKE_ASM_FLAGS "${LINKER_ASM_C_CXX_OPTIONS} ${ASM_C_CXX_OPTIONS} ${ASM_OPTIONS}" CACHE INTERNAL "")
