@@ -5,8 +5,8 @@
 #include <Stopwatch.hpp>
 #include <StopwatchConcept.hpp>
 
-static const Benchmark::BenchmarkDescriptor descriptor{Base::name(), 10'000,
-                                                       &Base::run};
+static const Benchmark::BenchmarkDescriptor descriptor{
+    Base::name(), Base::repeat(), &Base::run};
 
 int main() {
   Benchmark::Meta::Stopwatch auto stopwatch{Stopwatch::Stopwatch{}};
@@ -19,8 +19,9 @@ int main() {
   const auto [totalTime]{Benchmark::benchmark(stopwatch, descriptor)};
   const auto [name, cycles, dummy]{descriptor};
 
-  std::printf("Name: %10s\n\tTotal time: %luus\n\tCycles: %lu\n\tAverage: %luus\n",
-              name.data(), static_cast<std::uint32_t>(totalTime.count()),
-              static_cast<std::uint32_t>(cycles),
-              static_cast<std::uint32_t>(totalTime.count() / cycles));
+  std::printf(
+      "Name: %10s\n\tTotal time: %luus\n\tCycles: %lu\n\tAverage: %luus\n",
+      name.data(), static_cast<std::uint32_t>(totalTime.count()),
+      static_cast<std::uint32_t>(cycles),
+      static_cast<std::uint32_t>(totalTime.count() / cycles));
 }

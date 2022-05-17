@@ -18,6 +18,7 @@ add_library(${PROJECT_NAME}::${PROJECT_NAME} ALIAS ${PROJECT_NAME})
 target_sources(${PROJECT_NAME}
         PRIVATE
             ${CMAKE_CURRENT_SOURCE_DIR}/modules/nrfx/drivers/src/nrfx_timer.c
+            ${CMAKE_CURRENT_SOURCE_DIR}/modules/nrfx/drivers/src/nrfx_rng.c
 )
 target_include_directories(${PROJECT_NAME}
         PUBLIC

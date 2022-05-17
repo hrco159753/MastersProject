@@ -7,4 +7,6 @@ void run() noexcept {
   }
 }
 std::string_view name() noexcept { return "Nrf"; }
+
+std::size_t repeat() noexcept { return 10'000; }
 } // namespace Base
