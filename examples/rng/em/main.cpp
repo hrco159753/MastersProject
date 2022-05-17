@@ -1,5 +1,6 @@
 #include <cstdio>
 #include <numeric>
+#include <string_view>
 
 #include <Config.hpp>
 
@@ -9,7 +10,7 @@ namespace Base {
 
 using Em::Peripheral::Rng::Policy;
 
-constexpr static Policy kModulePolicy{Policy::Polling};
+constexpr static Policy kModulePolicy{Policy::Interrupt};
 constexpr static std::size_t kCountOfNumbers{1'000U};
 
 template <Policy kPolicy>
@@ -65,8 +66,6 @@ template <> void implementation<Policy::Interrupt>() {
   interruptImplementation();
 }
 
-void run() noexcept { implementation<kModulePolicy>(); }
-
 template <Policy kPolicy> constexpr static std::string_view kBenchmarkName;
 template <>
 constexpr std::string_view kBenchmarkName<Policy::Polling>{"Em::Rng::Polling"};
@@ -74,7 +73,12 @@ template <>
 constexpr std::string_view kBenchmarkName<Policy::Interrupt>{
     "Em::Rng::Interrupt"};
 
-std::string_view name() noexcept { return kBenchmarkName<kModulePolicy>; }
-
-std::size_t repeat() noexcept { return kCountOfNumbers; }
 } // namespace Base
+
+extern "C" {
+void run() { Base::implementation<Base::kModulePolicy>(); }
+
+const char *name() { return Base::kBenchmarkName<Base::kModulePolicy>.data(); }
+
+size_t repeat() { return Base::kCountOfNumbers; }
+}

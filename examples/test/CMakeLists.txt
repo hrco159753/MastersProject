@@ -11,7 +11,7 @@ set(EM_POSTFIX "em")
 add_executable(${PROJECT_NAME}-${NRF_POSTFIX})
 target_sources(${PROJECT_NAME}-${NRF_POSTFIX}
         PRIVATE
-            ${CMAKE_CURRENT_SOURCE_DIR}/nrf/main.cpp
+            ${CMAKE_CURRENT_SOURCE_DIR}/nrf/main.c
 )
 target_link_libraries(${PROJECT_NAME}-${NRF_POSTFIX}
         PRIVATE

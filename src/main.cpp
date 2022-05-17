@@ -5,8 +5,7 @@
 #include <Stopwatch.hpp>
 #include <StopwatchConcept.hpp>
 
-static const Benchmark::BenchmarkDescriptor descriptor{
-    Base::name(), Base::repeat(), &Base::run};
+static const Benchmark::BenchmarkDescriptor descriptor{name(), repeat(), &run};
 
 int main() {
   Benchmark::Meta::Stopwatch auto stopwatch{Stopwatch::Stopwatch{}};

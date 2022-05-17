@@ -1,12 +1,12 @@
 #include <Config.hpp>
 
-namespace Base {
-void run() noexcept {
-  for (std::uint32_t i{0U}; i < 100; ++i) {
+extern "C" {
+void run() {
+  for (size_t i{0U}; i < 100; ++i) {
     asm volatile("nop");
   }
 }
-std::string_view name() noexcept { return "Em"; }
+const char *name() { return "Em"; }
 
-std::size_t repeat() noexcept { return 10'000; }
-} // namespace Base
+size_t repeat() { return 10'000; }
+}

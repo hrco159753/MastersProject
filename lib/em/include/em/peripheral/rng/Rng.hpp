@@ -39,11 +39,11 @@ struct Driver {
   };
 
   struct ConditionStruct {
-    [[nodiscard]] constexpr bool isDone() const noexcept {
+    [[gnu::noinline]] [[nodiscard]] constexpr bool isDone() const noexcept {
       return Driver<std::integral_constant<Policy, Policy::Interrupt>>::done;
     }
 
-    void waitOn() const noexcept {
+    [[gnu::noinline]] void waitOn() const noexcept {
       while (not isDone()) {
       }
     }
@@ -64,7 +64,7 @@ struct Driver {
 
   /*--- Methods ---*/
   template <std::integral T = std::uint8_t>
-  T get() noexcept requires(kPolicy::value == Policy::Polling) {
+  [[gnu::noinline]] T get() noexcept requires(kPolicy::value == Policy::Polling) {
     Task task{};
     T returnValue;
     auto byteArray = static_cast<std::uint8_t *>(&returnValue);
@@ -80,7 +80,7 @@ struct Driver {
   }
 
   template <std::size_t N, std::integral T = std::uint8_t>
-  std::array<T, N> get() noexcept requires(kPolicy::value == Policy::Polling) {
+  [[gnu::noinline]] std::array<T, N> get() noexcept requires(kPolicy::value == Policy::Polling) {
     Task task{};
     std::array<T, N> returnValue;
 
@@ -99,7 +99,7 @@ struct Driver {
   }
 
   template <std::integral T = std::uint8_t>
-  ConditionStruct set(std::invocable<T> auto &userHandler) noexcept
+  [[gnu::noinline]] ConditionStruct set(std::invocable<T> auto &userHandler) noexcept
       requires(kPolicy::value == Policy::Interrupt) {
     Driver::context = &userHandler;
     Driver::handler = [](void *const context,

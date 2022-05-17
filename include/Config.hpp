@@ -1,9 +1,16 @@
 #pragma once
 
-#include <string_view>
+#include <stdint.h>
+#include <stddef.h>
 
-namespace Base {
-void run() noexcept;
-std::string_view name() noexcept;
-std::size_t repeat() noexcept;
-} // namespace Base
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+void run();
+const char *name();
+size_t repeat();
+
+#ifdef __cplusplus
+}
+#endif

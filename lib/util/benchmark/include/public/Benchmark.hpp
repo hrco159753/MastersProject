@@ -9,12 +9,12 @@
 namespace Benchmark {
 
     struct BenchmarkDescriptor {
-        constexpr BenchmarkDescriptor(const std::string_view name, const std::size_t repeat, void (*const run)() noexcept) noexcept
+        constexpr BenchmarkDescriptor(const std::string_view name, const std::size_t repeat, void (*const run)()) noexcept
             : name{name}, repeat{repeat}, run{run} {}
 
         const std::string_view name;
         const std::size_t repeat;
-        void (*const run)() noexcept;
+        void (*const run)();
     };
 
     struct BenchmarkResult {
